@@ -4,36 +4,45 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "url_mappings")
+@Table(name = "urls")
 public class UrlMapping {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "original_url", nullable = false, length = 2048)
+    @Column(name = "original_url", length = 2000, nullable = false)
     private String originalUrl;
 
-    @Column(name = "short_code", unique = true, nullable = false, length = 10)
+    @Column(name = "short_code", length = 10, nullable = false, unique = true)
     private String shortCode;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "visits_count")
+    @Column(name = "click_count")
     private Integer visitsCount = 0;
 
-    // Конструктори
-    public UrlMapping() {}
+    // Default no-args constructor required by JPA
+    public UrlMapping() {
+    }
 
+    // Add constructor with parameters
     public UrlMapping(String originalUrl, String shortCode) {
         this.originalUrl = originalUrl;
         this.shortCode = shortCode;
         this.createdAt = LocalDateTime.now();
+        this.visitsCount = 0;
     }
 
-    // Гетери і сетери
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Add missing method
+    public void incrementVisits() {
+        this.visitsCount = (this.visitsCount == null) ? 1 : this.visitsCount + 1;
+    }
+
+    // Getters and setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getOriginalUrl() { return originalUrl; }
     public void setOriginalUrl(String originalUrl) { this.originalUrl = originalUrl; }
@@ -46,6 +55,4 @@ public class UrlMapping {
 
     public Integer getVisitsCount() { return visitsCount; }
     public void setVisitsCount(Integer visitsCount) { this.visitsCount = visitsCount; }
-
-    public void incrementVisits() { this.visitsCount++; }
 }
