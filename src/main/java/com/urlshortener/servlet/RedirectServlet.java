@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+// Using "/*" pattern to catch all paths not matched by other servlets
 @WebServlet("/*")
 public class RedirectServlet extends HttpServlet {
 
@@ -22,24 +23,36 @@ public class RedirectServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String shortCode = null;
 
-        if (pathInfo == null) {
-            // Якщо шлях порожній, перенаправляємо на головну сторінку
+        // Handle the root path
+        if (requestURI.equals(contextPath) || requestURI.equals(contextPath + "/")) {
+            // If path is the root, forward to the main page
             request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
         }
 
-        // Видаляємо слеш на початку
-        String shortCode = pathInfo.substring(1);
+        // Extract shortCode from the URI
+        shortCode = requestURI.substring(contextPath.length() + 1);
+
+        // Skip if this is another servlet or JSP
+        if (shortCode.contains("/") || shortCode.equals("create") ||
+            shortCode.equals("list") || shortCode.endsWith(".jsp")) {
+            // Let the request continue to other servlets
+            request.getRequestDispatcher(shortCode).forward(request, response);
+            return;
+        }
 
         UrlMapping urlMapping = urlShortenerService.getOriginalUrl(shortCode);
 
         if (urlMapping != null) {
-            // Перенаправляємо на оригінальний URL
+            // Redirect to original URL
             response.sendRedirect(urlMapping.getOriginalUrl());
         } else {
-            // Якщо короткий код не знайдено
-            request.setAttribute("error", "Короткий URL не знайдено");
+            // If short code not found
+            request.setAttribute("error", "Short URL not found");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }

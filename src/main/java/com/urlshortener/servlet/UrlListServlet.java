@@ -22,13 +22,36 @@ public class UrlListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Use the getAllUrls() method here
         List<UrlMapping> urls = urlShortenerService.getAllUrls();
-
-        // Set the result as a request attribute
         request.setAttribute("urls", urls);
+        
+        // Calculate stats for displaying
+        int totalUrls = urls.size();
+        int totalClicks = 0;
+        double avgClicksPerUrl = 0;
+        UrlMapping mostClicked = null;
+        
+        for (UrlMapping url : urls) {
+            int clicks = url.getVisitsCount() != null ? url.getVisitsCount() : 0;
+            totalClicks += clicks;
+            
+            if (mostClicked == null || 
+                (url.getVisitsCount() != null && 
+                 mostClicked.getVisitsCount() != null && 
+                 url.getVisitsCount() > mostClicked.getVisitsCount())) {
+                mostClicked = url;
+            }
+        }
+        
+        if (totalUrls > 0) {
+            avgClicksPerUrl = (double) totalClicks / totalUrls;
+        }
+        
+        request.setAttribute("totalUrls", totalUrls);
+        request.setAttribute("totalClicks", totalClicks);
+        request.setAttribute("avgClicksPerUrl", avgClicksPerUrl);
+        request.setAttribute("mostClicked", mostClicked);
 
-        // Forward to JSP page to display the list
-        request.getRequestDispatcher("/WEB-INF/views/urlList.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/urlList.jsp").forward(request, response);
     }
 }

@@ -48,10 +48,5 @@ public class UrlMappingDao {
         return em.merge(urlMapping);
     }
 
-    public void delete(Long id) {
-        UrlMapping urlMapping = em.find(UrlMapping.class, id);
-        if (urlMapping != null) {
-            em.remove(urlMapping);
-        }
-    }
+    // Removed the unused delete(Long id) method
 }

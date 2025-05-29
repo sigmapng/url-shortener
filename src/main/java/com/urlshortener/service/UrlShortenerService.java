@@ -19,16 +19,16 @@ public class UrlShortenerService {
     private UrlMappingDao urlMappingDao;
 
     public UrlMapping createShortUrl(String originalUrl) {
-        // Перевірка, чи URL вже існує в системі
+        // Check if URL already exists in the system
         UrlMapping existingMapping = urlMappingDao.findByOriginalUrl(originalUrl);
         if (existingMapping != null) {
             return existingMapping;
         }
 
-        // Створення нового короткого посилання
+        // Create a new short URL
         String shortCode = generateShortCode();
         while (urlMappingDao.findByShortCode(shortCode) != null) {
-            shortCode = generateShortCode(); // Перегенерувати, якщо код вже існує
+            shortCode = generateShortCode(); // Regenerate if code already exists
         }
 
         UrlMapping urlMapping = new UrlMapping(originalUrl, shortCode);
@@ -57,3 +57,4 @@ public class UrlShortenerService {
         return sb.toString();
     }
 }
+

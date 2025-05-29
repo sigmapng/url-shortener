@@ -11,6 +11,8 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!-- The role url_app needs to be granted permissions -->
+            <property name="hibernate.connection.username" value="url_app"/>
         </properties>
     </persistence-unit>
 </persistence>

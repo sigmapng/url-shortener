@@ -24,9 +24,14 @@ public class CreateUrlServlet extends HttpServlet {
         String originalUrl = request.getParameter("originalUrl");
 
         if (originalUrl == null || originalUrl.trim().isEmpty()) {
-            request.setAttribute("error", "URL не може бути порожнім");
+            request.setAttribute("error", "URL cannot be empty");
             request.getRequestDispatcher("/index.jsp").forward(request, response);
             return;
+        }
+
+        // Add protocol if missing - using HTTPS by default for better security
+        if (!originalUrl.startsWith("http://") && !originalUrl.startsWith("https://")) {
+            originalUrl = "https://" + originalUrl;
         }
 
         try {
@@ -43,8 +48,9 @@ public class CreateUrlServlet extends HttpServlet {
             request.getRequestDispatcher("/index.jsp").forward(request, response);
 
         } catch (Exception e) {
-            request.setAttribute("error", "Помилка при створенні короткого URL: " + e.getMessage());
+            request.setAttribute("error", "Error creating short URL: " + e.getMessage());
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
 }
+
