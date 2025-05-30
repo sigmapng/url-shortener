@@ -7,12 +7,11 @@
     <persistence-unit name="urlShortenerPU" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/UrlShortenerDS</jta-data-source>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <!-- The role url_app needs to be granted permissions -->
-            <property name="hibernate.connection.username" value="url_app"/>
+            <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
         </properties>
     </persistence-unit>
 </persistence>

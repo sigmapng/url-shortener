@@ -19,16 +19,14 @@ public class UrlShortenerService {
     private UrlMappingDao urlMappingDao;
 
     public UrlMapping createShortUrl(String originalUrl) {
-        // Check if URL already exists in the system
         UrlMapping existingMapping = urlMappingDao.findByOriginalUrl(originalUrl);
         if (existingMapping != null) {
             return existingMapping;
         }
 
-        // Create a new short URL
         String shortCode = generateShortCode();
         while (urlMappingDao.findByShortCode(shortCode) != null) {
-            shortCode = generateShortCode(); // Regenerate if code already exists
+            shortCode = generateShortCode();
         }
 
         UrlMapping urlMapping = new UrlMapping(originalUrl, shortCode);
@@ -36,12 +34,7 @@ public class UrlShortenerService {
     }
 
     public UrlMapping getOriginalUrl(String shortCode) {
-        UrlMapping urlMapping = urlMappingDao.findByShortCode(shortCode);
-        if (urlMapping != null) {
-            urlMapping.incrementVisits();
-            urlMappingDao.update(urlMapping);
-        }
-        return urlMapping;
+        return urlMappingDao.findByShortCode(shortCode);
     }
 
     public List<UrlMapping> getAllUrls() {

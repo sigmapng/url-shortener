@@ -43,10 +43,4 @@ public class UrlMappingDao {
         return em.createQuery("SELECT u FROM UrlMapping u ORDER BY u.createdAt DESC", UrlMapping.class)
                 .getResultList();
     }
-
-    public UrlMapping update(UrlMapping urlMapping) {
-        return em.merge(urlMapping);
-    }
-
-    // Removed the unused delete(Long id) method
 }

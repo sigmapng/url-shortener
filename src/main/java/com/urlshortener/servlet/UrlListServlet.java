@@ -27,30 +27,7 @@ public class UrlListServlet extends HttpServlet {
         
         // Calculate stats for displaying
         int totalUrls = urls.size();
-        int totalClicks = 0;
-        double avgClicksPerUrl = 0;
-        UrlMapping mostClicked = null;
-        
-        for (UrlMapping url : urls) {
-            int clicks = url.getVisitsCount() != null ? url.getVisitsCount() : 0;
-            totalClicks += clicks;
-            
-            if (mostClicked == null || 
-                (url.getVisitsCount() != null && 
-                 mostClicked.getVisitsCount() != null && 
-                 url.getVisitsCount() > mostClicked.getVisitsCount())) {
-                mostClicked = url;
-            }
-        }
-        
-        if (totalUrls > 0) {
-            avgClicksPerUrl = (double) totalClicks / totalUrls;
-        }
-        
         request.setAttribute("totalUrls", totalUrls);
-        request.setAttribute("totalClicks", totalClicks);
-        request.setAttribute("avgClicksPerUrl", avgClicksPerUrl);
-        request.setAttribute("mostClicked", mostClicked);
 
         request.getRequestDispatcher("/WEB-INF/urlList.jsp").forward(request, response);
     }

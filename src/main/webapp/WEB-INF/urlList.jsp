@@ -6,7 +6,6 @@
         <th>Короткий код</th>
         <th>Оригінальний URL</th>
         <th>Дата створення</th>
-        <th>Переходи</th>
     </tr>
     </thead>
     <tbody>
@@ -15,8 +14,8 @@
             <td>${url.shortCode}</td>
             <td><a href="${url.originalUrl}" target="_blank">${url.originalUrl}</a></td>
             <td>${url.createdAt}</td>
-            <td>${url.visitsCount}</td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+
